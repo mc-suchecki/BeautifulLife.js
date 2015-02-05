@@ -22,11 +22,45 @@
 </head>
 <body>
 
-    <canvas id="canvas"></canvas>
+<!-- The main canvas. -->
+<canvas id="canvas"></canvas>
 
-    <!-- jQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    <!-- Bootstrap -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+<!-- Run and Step buttons. -->
+<div id="left-down-buttons" class="btn-group" role="group" aria-label="...">
+    <button type="button" class="btn btn-default">
+        <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+    </button>
+    <button type="button" class="btn btn-default">
+        <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
+    </button>
+</div>
+
+<!-- Buttons associated with board management and configuration. -->
+<div id="right-down-buttons" class="btn-group" role="group" aria-label="...">
+    <div class="btn-group dropup" role="group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+            <span class="glyphicon glyphicon-th" aria-hidden="true"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+            <li><a href="#">Clear</a></li>
+        </ul>
+    </div>
+    <div class="btn-group dropup" role="group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+            <li role="presentation" class="dropdown-header">Cell size</li>
+            <li><a href="#">10x10</a></li>
+            <li><a href="#">20x20</a></li>
+            <li><a href="#">50x50</a></li>
+        </ul>
+    </div>
+</div>
+
+<!-- jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 </body>
 </html>
