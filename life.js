@@ -3,6 +3,17 @@
  * @author Maciej 'mc' Suchecki
  */
 
+var addEvent = function(elem, type, eventHandle) {
+    if (elem == null || typeof(elem) == 'undefined') return;
+    if ( elem.addEventListener ) {
+        elem.addEventListener( type, eventHandle, false );
+    } else if ( elem.attachEvent ) {
+        elem.attachEvent( "on" + type, eventHandle );
+    } else {
+        elem["on"+type]=eventHandle;
+    }
+};
+
 var PIXEL_RATIO = (function () {
     var ctx = document.createElement("canvas").getContext("2d"),
         dpr = window.devicePixelRatio || 1,
@@ -27,7 +38,7 @@ function setupFullScreenCanvas() {
     return canvas;
 }
 
-function drawBoard(canvas, cellSize) {
+function drawGrid(canvas, cellSize) {
     var context = canvas.getContext("2d");
     // draw vertical lines
     for (var x = 0; x <= canvas.width; x += cellSize) {
@@ -48,7 +59,8 @@ function drawBoard(canvas, cellSize) {
 function init() {
     var cellSize = 20;
     var canvas = setupFullScreenCanvas();
-    drawBoard(canvas, cellSize);
+    drawGrid(canvas, cellSize);
 }
 
-init();
+addEvent(window, 'load', init)
+addEvent(window, 'resize', init)
