@@ -137,6 +137,18 @@ var GameOfLife = {
         GameOfLife.drawCells();
     },
 
+    clearBoard: function () {
+        GameOfLife.initializeEmptyBoard();
+        GameOfLife.drawGrid();
+        GameOfLife.drawCells();
+    },
+
+    randomizeBoard: function () {
+        GameOfLife.initializeRandomBoard();
+        GameOfLife.drawGrid();
+        GameOfLife.drawCells();
+    },
+
     // TODO change all these 3 functions, this is awful
     changeCellSizeTo10: function () {
         GameOfLife.cellSize = 10;
@@ -161,3 +173,6 @@ addEvent(window, 'resize', GameOfLife.init)
 addEvent(document.getElementById("cell-size-button-10"), 'click', GameOfLife.changeCellSizeTo10)
 addEvent(document.getElementById("cell-size-button-20"), 'click', GameOfLife.changeCellSizeTo20)
 addEvent(document.getElementById("cell-size-button-50"), 'click', GameOfLife.changeCellSizeTo50)
+
+addEvent(document.getElementById("clear-board-button"), 'click', GameOfLife.clearBoard)
+addEvent(document.getElementById("generate-random-board-button"), 'click', GameOfLife.randomizeBoard)
