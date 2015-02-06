@@ -40,9 +40,9 @@ var PIXEL_RATIO = (function () {
 // TODO end of code not associated with the game
 
 // TODO move this inside the game class
-function Cell(row, column) {
-    this.row = row;
+function Cell(column, row) {
     this.column = column;
+    this.row = row;
 };
 
 /**
@@ -87,13 +87,13 @@ var GameOfLife = {
     },
 
     createBoard: function (random) {
-        var board = [], row;
-        for (var y = 0; y < this.boardSize.height; y += 1) {
-            row = [];
-            for (var x = 0; x < this.boardSize.width; x += 1) {
-                row[x] = random ? Math.round(Math.random()) : 0;
+        var board = [], column;
+        for (var x = 0; x < this.boardSize.width; x += 1) {
+            column = [];
+            for (var y = 0; y < this.boardSize.height; y += 1) {
+                column[y] = random ? Math.round(Math.random()) : 0;
             }
-            board[y] = row;
+            board[x] = column;
         }
         return board;
     },
@@ -129,7 +129,7 @@ var GameOfLife = {
         var context = this.canvas.getContext("2d");
         for (var x = 0; x < this.boardSize.width; x++) {
             for (var y = 0; y < this.boardSize.height; y++) {
-                if (this.board[y][x] === 1) {
+                if (this.board[x][y] === 1) {
                     context.fillStyle = "#444444";
                 } else {
                     context.fillStyle = "#FFFFFF";
@@ -147,13 +147,13 @@ var GameOfLife = {
         GameOfLife.drawCells();
     },
 
-    calculateNeighbours: function (y, x) {
-        var total = (GameOfLife.board[y][x] !== 0) ? -1 : 0;
+    calculateNeighbours: function (x, y) {
+        var total = (GameOfLife.board[x][y] !== 0) ? -1 : 0;
         var height = GameOfLife.boardSize.height;
         var width = GameOfLife.boardSize.width;
         for (var h = -1; h <= 1; h++) {
             for (var w = -1; w <= 1; w++) {
-                if (GameOfLife.board[(height + (y + h)) % height][(width + (x + w)) % width] !== 0) {
+                if (GameOfLife.board[(width + (x + w)) % width][(height + (y + h)) % height] !== 0) {
                     total++;
                 }
             }
@@ -167,14 +167,14 @@ var GameOfLife = {
 
         for (var h = 0; h < GameOfLife.boardSize.height; h++) {
             for (var w = 0; w < GameOfLife.boardSize.width; w++) {
-                neighbours = GameOfLife.calculateNeighbours(h, w);
-                if (GameOfLife.board[h][w] !== 0) {
+                neighbours = GameOfLife.calculateNeighbours(w, h);
+                if (GameOfLife.board[w][h] !== 0) {
                     if (neighbours === 2 || neighbours === 3) {
-                        nextGenerationBoard[h][w] = 1;
+                        nextGenerationBoard[w][h] = 1;
                     }
                 } else {
                     if (neighbours === 3) {
-                        nextGenerationBoard[h][w] = 1;
+                        nextGenerationBoard[w][h] = 1;
                     }
                 }
             }
@@ -188,7 +188,7 @@ var GameOfLife = {
         if (GameOfLife.isRunning) {
             setTimeout(function() {
                 GameOfLife.step();
-            }, 500);
+            }, 200);
         }
     },
 
@@ -237,8 +237,8 @@ var GameOfLife = {
 
     switchCellState: function (event) {
         var cell = GameOfLife.getCursorPosition(event);
-        var state = GameOfLife.board[cell.row][cell.column] === 1 ? 0 : 1;
-        GameOfLife.board[cell.row][cell.column] = state;
+        var state = GameOfLife.board[cell.column][cell.row] === 1 ? 0 : 1;
+        GameOfLife.board[cell.column][cell.row] = state;
         GameOfLife.refreshCanvas();
     },
 
@@ -254,7 +254,35 @@ var GameOfLife = {
 
         x -= this.canvasMargin.horizontal;
 
-        return new Cell(Math.floor(y / this.cellSize), Math.floor(x / this.cellSize));
+        return new Cell(Math.floor(x / this.cellSize), Math.floor(y / this.cellSize));
+    },
+
+    drawPatternInTheMiddle: function (pattern) {
+        GameOfLife.board = GameOfLife.createBoard(false);
+        var middleX = Math.floor(this.boardSize.width / 2);
+        var middleY = Math.floor(this.boardSize.height / 2);
+        for(var i = 0, size = pattern.length; i < size ; i++) {
+            var coords = pattern[i];
+            GameOfLife.board[middleX + coords.column][middleY + coords.row] = 1;
+        }
+        GameOfLife.refreshCanvas();
+    },
+
+    patternGenerators: {
+        generateAcorn: function () {
+            var acorn = [new Cell(0,0), new Cell(-2,-1), new Cell(-3,1), new Cell(-2,1),
+                new Cell(1,1), new Cell(2,1), new Cell(3,1)];
+            GameOfLife.drawPatternInTheMiddle(acorn);
+        },
+        generateDiehard: function () {
+            var diehard = [new Cell(1,1), new Cell(2,1), new Cell(3,1), new Cell(2,-1),
+                new Cell(-3,0), new Cell(-3,1), new Cell(-4,0)];
+            GameOfLife.drawPatternInTheMiddle(diehard);
+        },
+        generateRpentonimo: function () {
+            var rpentonimo = [new Cell(0,0), new Cell(0,1), new Cell(0,-1), new Cell(-1,0), new Cell(1,-1)];
+            GameOfLife.drawPatternInTheMiddle(rpentonimo);
+        }
     }
 };
 
@@ -274,3 +302,8 @@ addEvent(document.getElementById("cell-size-button-50"), 'click', GameOfLife.cha
 
 // switching cell state by clicking on the canvas
 addEvent(document.getElementById("canvas"), 'click', GameOfLife.switchCellState);
+
+// patterns
+addEvent(document.getElementById("generate-acorn-button"), 'click', GameOfLife.patternGenerators.generateAcorn);
+addEvent(document.getElementById("generate-diehard-button"), 'click', GameOfLife.patternGenerators.generateDiehard);
+addEvent(document.getElementById("generate-r-pentomino-button"), 'click', GameOfLife.patternGenerators.generateRpentonimo);

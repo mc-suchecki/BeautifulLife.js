@@ -45,14 +45,21 @@
 
 <!-- Buttons associated with board management and configuration. -->
 <div id="right-down-buttons" class="btn-group" role="group" aria-label="...">
+    <button id="clear-board-button" type="button" class="btn btn-default btn-primary">
+        <span class="glyphicon glyphicon-erase" aria-hidden="true"></span>
+    </button>
     <div class="btn-group dropup" role="group">
         <button type="button" class="btn btn-default btn-primary dropdown-toggle" data-toggle="dropdown"
                 aria-expanded="false">
-            <span class="glyphicon glyphicon-th" aria-hidden="true"></span>
+            <span class="glyphicon glyphicon-import" aria-hidden="true"></span>
         </button>
         <ul class="dropdown-menu dropdown-menu-right" role="menu">
+            <li role="presentation" class="dropdown-header">Methuselah</li>
+            <li id="generate-acorn-button"><a>Acorn</a></li>
+            <li id="generate-diehard-button"><a>Diehard</a></li>
+            <li id="generate-r-pentomino-button"><a>R-pentomino</a></li>
+            <li role="presentation" class="divider"></li>
             <li id="generate-random-board-button"><a>Random</a></li>
-            <li id="clear-board-button"><a>Clear</a></li>
         </ul>
     </div>
     <div class="btn-group dropup" role="group">
