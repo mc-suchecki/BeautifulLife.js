@@ -42,54 +42,85 @@ var PIXEL_RATIO = (function () {
  */
 var GameOfLife = {
 
-    // variables
+    // settings
     cellSize: 20,
 
-    setupFullScreenCanvas : function () {
-        var ratio = PIXEL_RATIO;
-        var width = document.body.clientWidth;
-        var height = document.body.clientHeight;
-        var canvas = document.getElementById("canvas");
-        canvas.width = width * ratio;
-        canvas.height = height * ratio;
-        canvas.getContext("2d").setTransform(ratio, 0, 0, ratio, 0, 0);
-        return canvas;
+    // the board
+    board: [],
+    boardSize: {
+        height: 0,
+        width: 0
     },
 
-    drawGrid: function (canvas, cellSize) {
-        var context = canvas.getContext("2d");
+    // the canvas
+    canvas: document.getElementById("canvas"),
+    canvasMargin: {
+        vertical: 0,
+        horizontal: 0
+    },
+
+    setupFullScreenCanvas: function () {
+        var ratio = PIXEL_RATIO;
+        this.canvas.width = document.body.clientWidth * ratio;
+        this.canvas.height = document.body.clientHeight * ratio;
+        this.canvas.getContext("2d").setTransform(ratio, 0, 0, ratio, 0, 0);
+    },
+
+    calculateBoardSizeAndCanvasMargin: function () {
+        this.boardSize.height = Math.floor(document.body.clientHeight / this.cellSize);
+        this.boardSize.width = Math.floor(document.body.clientWidth / this.cellSize);
+        this.canvasMargin.vertical = document.body.clientHeight % this.cellSize;
+        this.canvasMargin.horizontal = (document.body.clientWidth % this.cellSize) / 2;
+    },
+
+    initializeBoard: function () {
+        this.board = [];
+        var row, i, j;
+        for (i = 0; i < this.boardSize.height; i += 1) {
+            row = [];
+            for (j = 0; j < this.boardSize.width; j += 1) {
+                row[j] = 0;
+            }
+            this.board[i] = row;
+        }
+    },
+
+    drawGrid: function () {
+        var context = this.canvas.getContext("2d");
 
         // draw vertical lines
-        for (var x = 0; x <= canvas.width; x += cellSize) {
+        for (var x = this.canvasMargin.horizontal; x <= this.canvas.width; x += this.cellSize) {
             context.moveTo(x, 0);
-            context.lineTo(x, canvas.height);
+            context.lineTo(x, this.canvas.height - this.canvasMargin.vertical);
         }
 
         // draw horizontal lines
-        for (var x = 0; x <= canvas.height; x += cellSize) {
-            context.moveTo(0, x);
-            context.lineTo(canvas.width, x);
+        for (var y = 0; y <= this.canvas.height; y += this.cellSize) {
+            context.moveTo(this.canvasMargin.horizontal, y);
+            context.lineTo(this.canvas.width - this.canvasMargin.horizontal, y);
         }
 
         context.strokeStyle = "#DDDDDD";
         context.stroke();
     },
 
-    init : function () {
-        var canvas = GameOfLife.setupFullScreenCanvas();
-        GameOfLife.drawGrid(canvas, GameOfLife.cellSize);
+    init: function () {
+        GameOfLife.setupFullScreenCanvas();
+        GameOfLife.calculateBoardSizeAndCanvasMargin();
+        GameOfLife.initializeBoard();
+        GameOfLife.drawGrid();
     },
 
     // TODO change all these 3 functions, this is awful
-    changeCellSizeTo10 : function () {
+    changeCellSizeTo10: function () {
         GameOfLife.cellSize = 10;
         GameOfLife.init();
     },
-    changeCellSizeTo20 : function () {
+    changeCellSizeTo20: function () {
         GameOfLife.cellSize = 20;
         GameOfLife.init();
     },
-    changeCellSizeTo50 : function () {
+    changeCellSizeTo50: function () {
         GameOfLife.cellSize = 50;
         GameOfLife.init();
     }
@@ -100,6 +131,7 @@ addEvent(window, 'load', GameOfLife.init)
 addEvent(window, 'resize', GameOfLife.init)
 
 // connect the buttons to actions
+// TODO mark the selected one somehow
 addEvent(document.getElementById("cell-size-button-10"), 'click', GameOfLife.changeCellSizeTo10)
 addEvent(document.getElementById("cell-size-button-20"), 'click', GameOfLife.changeCellSizeTo20)
 addEvent(document.getElementById("cell-size-button-50"), 'click', GameOfLife.changeCellSizeTo50)
