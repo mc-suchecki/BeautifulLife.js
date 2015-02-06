@@ -17,12 +17,12 @@ body, html {
 /* Position the buttons. */
 #left-down-buttons {
     position: absolute;
-    bottom: 20px;
-    left: 20px;
+    bottom: 25px;
+    left: 25px;
 }
 
 #right-down-buttons {
     position: absolute;
-    bottom: 20px;
-    right: 20px;
+    bottom: 25px;
+    right: 25px;
 }

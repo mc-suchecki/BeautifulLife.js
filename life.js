@@ -73,16 +73,24 @@ var GameOfLife = {
         this.canvasMargin.horizontal = (document.body.clientWidth % this.cellSize) / 2;
     },
 
-    initializeBoard: function () {
-        this.board = [];
-        var row, i, j;
-        for (i = 0; i < this.boardSize.height; i += 1) {
+    createBoard: function(random) {
+        var board = [], row;
+        for (var y = 0; y < this.boardSize.height; y += 1) {
             row = [];
-            for (j = 0; j < this.boardSize.width; j += 1) {
-                row[j] = 0;
+            for (var x = 0; x < this.boardSize.width; x += 1) {
+                row[x] = random ? Math.round(Math.random()) : 0;
             }
-            this.board[i] = row;
+            board[y] = row;
         }
+        return board;
+    },
+
+    initializeEmptyBoard: function () {
+        this.board = this.createBoard(false);
+    },
+
+    initializeRandomBoard: function () {
+        this.board = this.createBoard(true);
     },
 
     drawGrid: function () {
@@ -100,15 +108,33 @@ var GameOfLife = {
             context.lineTo(this.canvas.width - this.canvasMargin.horizontal, y);
         }
 
-        context.strokeStyle = "#DDDDDD";
+        context.strokeStyle = "#BBBBBB";
         context.stroke();
+    },
+
+    drawCells: function () {
+        var context = this.canvas.getContext("2d");
+        for (var x = 0; x < this.boardSize.width; x++) {
+            for (var y = 0; y < this.boardSize.height; y++) {
+                if (this.board[y][x] === 1) {
+                    context.fillStyle = "#444444";
+                } else {
+                    context.fillStyle = "#FFFFFF";
+                }
+                context.fillRect(
+                    x * this.cellSize + this.canvasMargin.horizontal + 1,
+                    y * this.cellSize + 1, this.cellSize - 1, this.cellSize - 1
+                );
+            }
+        }
     },
 
     init: function () {
         GameOfLife.setupFullScreenCanvas();
         GameOfLife.calculateBoardSizeAndCanvasMargin();
-        GameOfLife.initializeBoard();
+        GameOfLife.initializeEmptyBoard();
         GameOfLife.drawGrid();
+        GameOfLife.drawCells();
     },
 
     // TODO change all these 3 functions, this is awful
