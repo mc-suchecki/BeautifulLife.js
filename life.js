@@ -50,6 +50,9 @@ function Cell(row, column) {
  */
 var GameOfLife = {
 
+    // state
+    isRunning: false,
+
     // settings
     cellSize: 20,
 
@@ -66,6 +69,8 @@ var GameOfLife = {
         vertical: 0,
         horizontal: 0
     },
+
+    // TODO move dead/alive states to enum
 
     setupFullScreenCanvas: function () {
         var ratio = PIXEL_RATIO;
@@ -180,6 +185,23 @@ var GameOfLife = {
     step: function () {
         GameOfLife.generateNewPopulation();
         GameOfLife.refreshCanvas();
+        if (GameOfLife.isRunning) {
+            setTimeout(function() {
+                GameOfLife.step();
+            }, 500);
+        }
+    },
+
+    runOrPause: function () {
+        GameOfLife.isRunning = !GameOfLife.isRunning;
+        if (GameOfLife.isRunning) {
+            GameOfLife.step();
+            document.getElementById("run-icon").style.display = "none";
+            document.getElementById("pause-icon").style.display = "inline";
+        } else {
+            document.getElementById("run-icon").style.display = "inline";
+            document.getElementById("pause-icon").style.display = "none";
+        }
     },
 
     init: function () {
@@ -234,13 +256,14 @@ var GameOfLife = {
 
         return new Cell(Math.floor(y / this.cellSize), Math.floor(x / this.cellSize));
     }
-}
+};
 
 // connect the event handlers
 addEvent(window, 'load', GameOfLife.init);
 addEvent(window, 'resize', GameOfLife.init);
 
 // connect the buttons to actions
+addEvent(document.getElementById("run-button"), 'click', GameOfLife.runOrPause);
 addEvent(document.getElementById("step-button"), 'click', GameOfLife.step);
 addEvent(document.getElementById("clear-board-button"), 'click', GameOfLife.clearBoard);
 addEvent(document.getElementById("generate-random-board-button"), 'click', GameOfLife.randomizeBoard);
