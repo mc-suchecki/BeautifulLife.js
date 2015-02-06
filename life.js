@@ -142,6 +142,46 @@ var GameOfLife = {
         GameOfLife.drawCells();
     },
 
+    calculateNeighbours: function (y, x) {
+        var total = (GameOfLife.board[y][x] !== 0) ? -1 : 0;
+        var height = GameOfLife.boardSize.height;
+        var width = GameOfLife.boardSize.width;
+        for (var h = -1; h <= 1; h++) {
+            for (var w = -1; w <= 1; w++) {
+                if (GameOfLife.board[(height + (y + h)) % height][(width + (x + w)) % width] !== 0) {
+                    total++;
+                }
+            }
+        }
+        return total;
+    },
+
+    generateNewPopulation: function () {
+        var neighbours;
+        var nextGenerationBoard = GameOfLife.createBoard(false);
+
+        for (var h = 0; h < GameOfLife.boardSize.height; h++) {
+            for (var w = 0; w < GameOfLife.boardSize.width; w++) {
+                neighbours = GameOfLife.calculateNeighbours(h, w);
+                if (GameOfLife.board[h][w] !== 0) {
+                    if (neighbours === 2 || neighbours === 3) {
+                        nextGenerationBoard[h][w] = 1;
+                    }
+                } else {
+                    if (neighbours === 3) {
+                        nextGenerationBoard[h][w] = 1;
+                    }
+                }
+            }
+        }
+        GameOfLife.board = nextGenerationBoard;
+    },
+
+    step: function () {
+        GameOfLife.generateNewPopulation();
+        GameOfLife.refreshCanvas();
+    },
+
     init: function () {
         GameOfLife.setupFullScreenCanvas();
         GameOfLife.calculateBoardSizeAndCanvasMargin();
@@ -159,7 +199,7 @@ var GameOfLife = {
         GameOfLife.refreshCanvas();
     },
 
-    // TODO change all these 3 functions, this is awful
+    // TODO change these 3 functions, this is awful
     changeCellSizeTo10: function () {
         GameOfLife.cellSize = 10;
         GameOfLife.init();
@@ -197,16 +237,17 @@ var GameOfLife = {
 }
 
 // connect the event handlers
-addEvent(window, 'load', GameOfLife.init)
-addEvent(window, 'resize', GameOfLife.init)
+addEvent(window, 'load', GameOfLife.init);
+addEvent(window, 'resize', GameOfLife.init);
 
 // connect the buttons to actions
-addEvent(document.getElementById("clear-board-button"), 'click', GameOfLife.clearBoard)
-addEvent(document.getElementById("generate-random-board-button"), 'click', GameOfLife.randomizeBoard)
+addEvent(document.getElementById("step-button"), 'click', GameOfLife.step);
+addEvent(document.getElementById("clear-board-button"), 'click', GameOfLife.clearBoard);
+addEvent(document.getElementById("generate-random-board-button"), 'click', GameOfLife.randomizeBoard);
 // TODO mark the selected cell size somehow
-addEvent(document.getElementById("cell-size-button-10"), 'click', GameOfLife.changeCellSizeTo10)
-addEvent(document.getElementById("cell-size-button-20"), 'click', GameOfLife.changeCellSizeTo20)
-addEvent(document.getElementById("cell-size-button-50"), 'click', GameOfLife.changeCellSizeTo50)
+addEvent(document.getElementById("cell-size-button-10"), 'click', GameOfLife.changeCellSizeTo10);
+addEvent(document.getElementById("cell-size-button-20"), 'click', GameOfLife.changeCellSizeTo20);
+addEvent(document.getElementById("cell-size-button-50"), 'click', GameOfLife.changeCellSizeTo50);
 
 // switching cell state by clicking on the canvas
-addEvent(document.getElementById("canvas"), 'click', GameOfLife.switchCellState)
+addEvent(document.getElementById("canvas"), 'click', GameOfLife.switchCellState);
