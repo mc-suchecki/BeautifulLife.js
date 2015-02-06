@@ -3,6 +3,8 @@
  * @author Maciej 'mc' Suchecki
  */
 
+// TODO check this file using JSLint
+
 // TODO move all of the above to external file
 /**
  * Adds new event handler properly, regardless of the browser.
@@ -36,6 +38,12 @@ var PIXEL_RATIO = (function () {
     return devicePixelRatio / backingStoreRatio;
 })();
 // TODO end of code not associated with the game
+
+// TODO move this inside the game class
+function Cell(row, column) {
+    this.row = row;
+    this.column = column;
+};
 
 /**
  * The main class.
@@ -73,7 +81,7 @@ var GameOfLife = {
         this.canvasMargin.horizontal = (document.body.clientWidth % this.cellSize) / 2;
     },
 
-    createBoard: function(random) {
+    createBoard: function (random) {
         var board = [], row;
         for (var y = 0; y < this.boardSize.height; y += 1) {
             row = [];
@@ -129,24 +137,26 @@ var GameOfLife = {
         }
     },
 
+    refreshCanvas: function () {
+        GameOfLife.drawGrid();
+        GameOfLife.drawCells();
+    },
+
     init: function () {
         GameOfLife.setupFullScreenCanvas();
         GameOfLife.calculateBoardSizeAndCanvasMargin();
         GameOfLife.initializeEmptyBoard();
-        GameOfLife.drawGrid();
-        GameOfLife.drawCells();
+        GameOfLife.refreshCanvas();
     },
 
     clearBoard: function () {
         GameOfLife.initializeEmptyBoard();
-        GameOfLife.drawGrid();
-        GameOfLife.drawCells();
+        GameOfLife.refreshCanvas();
     },
 
     randomizeBoard: function () {
         GameOfLife.initializeRandomBoard();
-        GameOfLife.drawGrid();
-        GameOfLife.drawCells();
+        GameOfLife.refreshCanvas();
     },
 
     // TODO change all these 3 functions, this is awful
@@ -161,6 +171,28 @@ var GameOfLife = {
     changeCellSizeTo50: function () {
         GameOfLife.cellSize = 50;
         GameOfLife.init();
+    },
+
+    switchCellState: function (event) {
+        var cell = GameOfLife.getCursorPosition(event);
+        var state = GameOfLife.board[cell.row][cell.column] === 1 ? 0 : 1;
+        GameOfLife.board[cell.row][cell.column] = state;
+        GameOfLife.refreshCanvas();
+    },
+
+    getCursorPosition: function (event) {
+        var x, y;
+        if (event.pageX || event.pageY) {
+            x = event.pageX;
+            y = event.pageY;
+        } else {
+            x = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+            y = event.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+        }
+
+        x -= this.canvasMargin.horizontal;
+
+        return new Cell(Math.floor(y / this.cellSize), Math.floor(x / this.cellSize));
     }
 }
 
@@ -169,10 +201,12 @@ addEvent(window, 'load', GameOfLife.init)
 addEvent(window, 'resize', GameOfLife.init)
 
 // connect the buttons to actions
-// TODO mark the selected one somehow
+addEvent(document.getElementById("clear-board-button"), 'click', GameOfLife.clearBoard)
+addEvent(document.getElementById("generate-random-board-button"), 'click', GameOfLife.randomizeBoard)
+// TODO mark the selected cell size somehow
 addEvent(document.getElementById("cell-size-button-10"), 'click', GameOfLife.changeCellSizeTo10)
 addEvent(document.getElementById("cell-size-button-20"), 'click', GameOfLife.changeCellSizeTo20)
 addEvent(document.getElementById("cell-size-button-50"), 'click', GameOfLife.changeCellSizeTo50)
 
-addEvent(document.getElementById("clear-board-button"), 'click', GameOfLife.clearBoard)
-addEvent(document.getElementById("generate-random-board-button"), 'click', GameOfLife.randomizeBoard)
+// switching cell state by clicking on the canvas
+addEvent(document.getElementById("canvas"), 'click', GameOfLife.switchCellState)
