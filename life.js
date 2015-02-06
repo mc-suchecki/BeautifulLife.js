@@ -42,7 +42,7 @@ var PIXEL_RATIO = (function () {
  */
 var GameOfLife = {
 
-    // parameters
+    // variables
     cellSize: 20,
 
     setupFullScreenCanvas : function () {
@@ -76,12 +76,30 @@ var GameOfLife = {
     },
 
     init : function () {
-        var cellSize = 20;
         var canvas = GameOfLife.setupFullScreenCanvas();
-        GameOfLife.drawGrid(canvas, cellSize);
+        GameOfLife.drawGrid(canvas, GameOfLife.cellSize);
+    },
+
+    // TODO change all these 3 functions, this is awful
+    changeCellSizeTo10 : function () {
+        GameOfLife.cellSize = 10;
+        GameOfLife.init();
+    },
+    changeCellSizeTo20 : function () {
+        GameOfLife.cellSize = 20;
+        GameOfLife.init();
+    },
+    changeCellSizeTo50 : function () {
+        GameOfLife.cellSize = 50;
+        GameOfLife.init();
     }
 }
 
 // connect the event handlers
 addEvent(window, 'load', GameOfLife.init)
 addEvent(window, 'resize', GameOfLife.init)
+
+// connect the buttons to actions
+addEvent(document.getElementById("cell-size-button-10"), 'click', GameOfLife.changeCellSizeTo10)
+addEvent(document.getElementById("cell-size-button-20"), 'click', GameOfLife.changeCellSizeTo20)
+addEvent(document.getElementById("cell-size-button-50"), 'click', GameOfLife.changeCellSizeTo50)
