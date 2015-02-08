@@ -186,7 +186,7 @@ var GameOfLife = {
         GameOfLife.generateNewPopulation();
         GameOfLife.refreshCanvas();
         if (GameOfLife.isRunning) {
-            setTimeout(function() {
+            setTimeout(function () {
                 GameOfLife.step();
             }, 200);
         }
@@ -258,10 +258,11 @@ var GameOfLife = {
     },
 
     drawPatternInTheMiddle: function (pattern) {
+        // TODO check if pattern fits on the screen!
         GameOfLife.board = GameOfLife.createBoard(false);
         var middleX = Math.floor(this.boardSize.width / 2);
         var middleY = Math.floor(this.boardSize.height / 2);
-        for(var i = 0, size = pattern.length; i < size ; i++) {
+        for (var i = 0, size = pattern.length; i < size; i++) {
             var coords = pattern[i];
             GameOfLife.board[middleX + coords.column][middleY + coords.row] = 1;
         }
@@ -269,18 +270,31 @@ var GameOfLife = {
     },
 
     patternGenerators: {
+        // Oscillators
+        generateTrafficLight: function () {
+            var trafficLight = [new Cell(3, -1), new Cell(3, 0), new Cell(3, 1), new Cell(-3, -1), new Cell(-3, 0), new Cell(-3, 1),
+                new Cell(-1, 3), new Cell(0, 3), new Cell(1,3), new Cell(-1, -3), new Cell(0, -3), new Cell(1, -3)];
+            GameOfLife.drawPatternInTheMiddle(trafficLight);
+        },
+        generatePrePulsar: function () {
+            var prePulsar = [new Cell(2, -1), new Cell(2, 0), new Cell(2, 1), new Cell(3, -1), new Cell(3, 1),
+                new Cell(4, -1), new Cell(4, 0), new Cell(4, 1), new Cell(-2, -1), new Cell(-2, 0), new Cell(-2, 1),
+                new Cell(-3, -1), new Cell(-3, 1), new Cell(-4, -1), new Cell(-4, 0), new Cell(-4, 1)];
+            GameOfLife.drawPatternInTheMiddle(prePulsar);
+        },
+        // Methuselahs
         generateAcorn: function () {
-            var acorn = [new Cell(0,0), new Cell(-2,-1), new Cell(-3,1), new Cell(-2,1),
-                new Cell(1,1), new Cell(2,1), new Cell(3,1)];
+            var acorn = [new Cell(0, 0), new Cell(-2, -1), new Cell(-3, 1), new Cell(-2, 1),
+                new Cell(1, 1), new Cell(2, 1), new Cell(3, 1)];
             GameOfLife.drawPatternInTheMiddle(acorn);
         },
         generateDiehard: function () {
-            var diehard = [new Cell(1,1), new Cell(2,1), new Cell(3,1), new Cell(2,-1),
-                new Cell(-3,0), new Cell(-3,1), new Cell(-4,0)];
+            var diehard = [new Cell(1, 1), new Cell(2, 1), new Cell(3, 1), new Cell(2, -1),
+                new Cell(-3, 0), new Cell(-3, 1), new Cell(-4, 0)];
             GameOfLife.drawPatternInTheMiddle(diehard);
         },
         generateRpentonimo: function () {
-            var rpentonimo = [new Cell(0,0), new Cell(0,1), new Cell(0,-1), new Cell(-1,0), new Cell(1,-1)];
+            var rpentonimo = [new Cell(0, 0), new Cell(0, 1), new Cell(0, -1), new Cell(-1, 0), new Cell(1, -1)];
             GameOfLife.drawPatternInTheMiddle(rpentonimo);
         }
     }
@@ -304,6 +318,8 @@ addEvent(document.getElementById("cell-size-button-50"), 'click', GameOfLife.cha
 addEvent(document.getElementById("canvas"), 'click', GameOfLife.switchCellState);
 
 // patterns
+addEvent(document.getElementById("generate-traffic-light-button"), 'click', GameOfLife.patternGenerators.generateTrafficLight);
+addEvent(document.getElementById("generate-pre-pulsar-button"), 'click', GameOfLife.patternGenerators.generatePrePulsar);
 addEvent(document.getElementById("generate-acorn-button"), 'click', GameOfLife.patternGenerators.generateAcorn);
 addEvent(document.getElementById("generate-diehard-button"), 'click', GameOfLife.patternGenerators.generateDiehard);
 addEvent(document.getElementById("generate-r-pentomino-button"), 'click', GameOfLife.patternGenerators.generateRpentonimo);
