@@ -270,17 +270,6 @@ var GameOfLife = {
     },
 
     patternGenerators: {
-        // Guns
-        generateGosperGliderGun: function () {
-            var gosperGun = [new Cell(4, -4), new Cell(2, -3), new Cell(4, -3), new Cell(-8, -2), new Cell(-7, -2),
-                new Cell(0, -2), new Cell(1, -2), new Cell(14, -2), new Cell(15, -2), new Cell(-9, -1),
-                new Cell(-5, -1), new Cell(0, -1), new Cell(1, -1), new Cell(14, -1), new Cell(15, -1),
-                new Cell(-20, 0), new Cell(-19, 0), new Cell(-10, 0), new Cell(-4, 0), new Cell(0, 0), new Cell(1, 0),
-                new Cell(-20, 1), new Cell(-19, 1), new Cell(-10, 1), new Cell(-6, 1), new Cell(-4, 1), new Cell(-3, 1),
-                new Cell(2, 1), new Cell(4, 1), new Cell(-10, 2), new Cell(-4, 2), new Cell(4, 2), new Cell(-9, 3),
-                new Cell(-5, 3), new Cell(-8, 4), new Cell(-7, 4)];
-            GameOfLife.drawPatternInTheMiddle(gosperGun);
-        },
         // Oscillators
         generateTrafficLight: function () {
             var trafficLight = [new Cell(3, -1), new Cell(3, 0), new Cell(3, 1), new Cell(-3, -1), new Cell(-3, 0), new Cell(-3, 1),
@@ -292,6 +281,45 @@ var GameOfLife = {
                 new Cell(4, -1), new Cell(4, 0), new Cell(4, 1), new Cell(-2, -1), new Cell(-2, 0), new Cell(-2, 1),
                 new Cell(-3, -1), new Cell(-3, 1), new Cell(-4, -1), new Cell(-4, 0), new Cell(-4, 1)];
             GameOfLife.drawPatternInTheMiddle(prePulsar);
+        },
+        // Spaceships
+        generateGlider: function () {
+            var glider = [
+                new Cell(-1, 1),
+                new Cell(0, 1),
+                new Cell(1, 1),
+                new Cell(1, 0),
+                new Cell(0,-1)
+            ];
+            GameOfLife.drawPatternInTheMiddle(glider);
+        },
+        generateLWSS: function () {
+            var lwss = [
+                new Cell(1, 3),
+                new Cell(2, 3),
+                new Cell(0, 2),
+                new Cell(1, 2),
+                new Cell(2, 2),
+                new Cell(3, 2),
+                new Cell(0, 1),
+                new Cell(1, 1),
+                new Cell(3, 1),
+                new Cell(4, 1),
+                new Cell(2, 0),
+                new Cell(3, 0)
+            ];
+            GameOfLife.drawPatternInTheMiddle(lwss);
+        },
+        // Guns
+        generateGosperGliderGun: function () {
+            var gosperGun = [new Cell(4, -4), new Cell(2, -3), new Cell(4, -3), new Cell(-8, -2), new Cell(-7, -2),
+                new Cell(0, -2), new Cell(1, -2), new Cell(14, -2), new Cell(15, -2), new Cell(-9, -1),
+                new Cell(-5, -1), new Cell(0, -1), new Cell(1, -1), new Cell(14, -1), new Cell(15, -1),
+                new Cell(-20, 0), new Cell(-19, 0), new Cell(-10, 0), new Cell(-4, 0), new Cell(0, 0), new Cell(1, 0),
+                new Cell(-20, 1), new Cell(-19, 1), new Cell(-10, 1), new Cell(-6, 1), new Cell(-4, 1), new Cell(-3, 1),
+                new Cell(2, 1), new Cell(4, 1), new Cell(-10, 2), new Cell(-4, 2), new Cell(4, 2), new Cell(-9, 3),
+                new Cell(-5, 3), new Cell(-8, 4), new Cell(-7, 4)];
+            GameOfLife.drawPatternInTheMiddle(gosperGun);
         },
         // Methuselahs
         generateAcorn: function () {
@@ -329,6 +357,8 @@ addEvent(document.getElementById("cell-size-button-50"), 'click', GameOfLife.cha
 addEvent(document.getElementById("canvas"), 'click', GameOfLife.switchCellState);
 
 // patterns
+addEvent(document.getElementById("generate-glider-button"), 'click', GameOfLife.patternGenerators.generateGlider);
+addEvent(document.getElementById("generate-lwss-button"), 'click', GameOfLife.patternGenerators.generateLWSS);
 addEvent(document.getElementById("generate-glider-gun-button"), 'click', GameOfLife.patternGenerators.generateGosperGliderGun);
 addEvent(document.getElementById("generate-traffic-light-button"), 'click', GameOfLife.patternGenerators.generateTrafficLight);
 addEvent(document.getElementById("generate-pre-pulsar-button"), 'click', GameOfLife.patternGenerators.generatePrePulsar);
