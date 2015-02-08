@@ -1,2 +1,8 @@
 # WebStorm files
 .idea
+
+# LaTeX
+docs/*.aux
+docs/*.bbl
+docs/*.blg
+docs/*.out
