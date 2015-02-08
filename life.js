@@ -230,8 +230,8 @@ var GameOfLife = {
         GameOfLife.cellSize = 20;
         GameOfLife.init();
     },
-    changeCellSizeTo50: function () {
-        GameOfLife.cellSize = 50;
+    changeCellSizeTo40: function () {
+        GameOfLife.cellSize = 40;
         GameOfLife.init();
     },
 
@@ -351,7 +351,7 @@ addEvent(document.getElementById("generate-random-board-button"), 'click', GameO
 // TODO mark the selected cell size somehow
 addEvent(document.getElementById("cell-size-button-10"), 'click', GameOfLife.changeCellSizeTo10);
 addEvent(document.getElementById("cell-size-button-20"), 'click', GameOfLife.changeCellSizeTo20);
-addEvent(document.getElementById("cell-size-button-50"), 'click', GameOfLife.changeCellSizeTo50);
+addEvent(document.getElementById("cell-size-button-40"), 'click', GameOfLife.changeCellSizeTo40);
 
 // switching cell state by clicking on the canvas
 addEvent(document.getElementById("canvas"), 'click', GameOfLife.switchCellState);
