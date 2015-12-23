@@ -43,7 +43,7 @@ var PIXEL_RATIO = (function () {
 function Cell(column, row) {
     this.column = column;
     this.row = row;
-};
+}
 
 /**
  * The main class.
